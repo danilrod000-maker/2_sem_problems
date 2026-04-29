@@ -3,6 +3,7 @@ def merge_sort(arr):
         return arr
 
     mid = len(arr) // 2
+
     left = arr[:mid]
     right = arr[mid:]
 
@@ -16,7 +17,7 @@ def merge_sort(arr):
 def merge(left, right):
     result = []
     i = j = 0
-    #сравниваем элементы из левой и правой частей и добавляем меньший
+    #сраниваем элементы из левой и правой частей и добавляем меньший
     while i < len(left) and j < len(right):
         if left[i] <= right[j]:
             result.append(left[i])
@@ -37,10 +38,6 @@ def merge(left, right):
 
 
 
-
-
-
 unsorted = input().split()
 sorted_arr = merge_sort(unsorted)
-#print(unsorted)
 print(sorted_arr)

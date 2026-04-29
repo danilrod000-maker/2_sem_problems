@@ -1,71 +1,55 @@
 from rational import create, add, sub, mul, div, power, compare, to_int, to_float, to_str
+# Тесты
+r = create(2, 4)
+assert r.numer == 1 and r.denom == 2, "create(2,4) -> 1/2"
 
+r = create(0, 5)
+assert r.numer == 0 and r.denom == 1, "create(0,5) -> 0/1"
 
-if __name__ == "__main__":
-    # Простые тесты без unittest
-    def assert_equal(actual, expected, test_name):
-        if actual == expected:
-            print(f"[OK] {test_name}")
-        else:
-            print(f"[FAIL] {test_name}: expected {expected}, got {actual}")
+r = create(1, -2)
+assert r.numer == -1 and r.denom == 2, "create(1,-2) -> -1/2"
 
-    # 1. create
-    r1 = create(2, 4)
-    assert_equal((r1.numer, r1.denom), (1, 2), "create сокращает 2/4")
+r = create(-1, -2)
+assert r.numer == 1 and r.denom == 2, "create(-1,-2) -> 1/2"
 
-    r2 = create(0, 5)
-    assert_equal((r2.numer, r2.denom), (0, 1), "create нулевой числитель")
+r = create(5, 0)
+assert r is None, "create(5,0) -> None"
 
-    r3 = create(1, -2)
-    assert_equal((r3.numer, r3.denom), (-1, 2), "create отрицательный знаменатель")
+a = create(1, 2)
+b = create(1, 3)
+res = add(a, b)
+assert res.numer == 5 and res.denom == 6, "add(1/2,1/3) -> 5/6"
 
-    r4 = create(-3, -4)
-    assert_equal((r4.numer, r4.denom), (3, 4), "create два отрицательных")
+res = sub(a, b)
+assert res.numer == 1 and res.denom == 6, "sub(1/2,1/3) -> 1/6"
 
-    r5 = create(5, 0)
-    assert_equal(r5, None, "create знаменатель ноль")
+c = create(2, 3)
+res = mul(a, c)
+assert res.numer == 1 and res.denom == 3, "mul(1/2,2/3) -> 1/3"
 
-    # 2. add
-    r6 = create(1, 2)
-    r7 = create(1, 3)
-    res_add = add(r6, r7)
-    assert_equal((res_add.numer, res_add.denom), (5, 6), "add 1/2 + 1/3")
+res = div(a, c)
+assert res.numer == 3 and res.denom == 4, "div(1/2,2/3) -> 3/4"
 
-    # 3. sub
-    res_sub = sub(r6, r7)
-    assert_equal((res_sub.numer, res_sub.denom), (1, 6), "sub 1/2 - 1/3")
+res = power(c, 2)
+assert res.numer == 4 and res.denom == 9, "power(2/3,2) -> 4/9"
 
-    # 4. mul
-    res_mul = mul(r6, create(2, 3))
-    assert_equal((res_mul.numer, res_mul.denom), (1, 3), "mul 1/2 * 2/3")
+assert compare(a, c) == -1, "compare(1/2,2/3) -> -1"
+assert compare(c, a) == 1, "compare(2/3,1/2) -> 1"
+d = create(2, 4)
+assert compare(a, d) == 0, "compare(1/2,2/4) -> 0"
 
-    # 5. div
-    res_div = div(r6, create(2, 3))
-    assert_equal((res_div.numer, res_div.denom), (3, 4), "div (1/2) / (2/3)")
+r = create(7, 3)
+assert to_int(r) == 2, "to_int(7/3) -> 2"
+r = create(-7, 3)
+assert to_int(r) == -3, "to_int(-7/3) -> -3"
 
-    # 6. power
-    res_pow = power(create(2, 3), 2)
-    assert_equal((res_pow.numer, res_pow.denom), (4, 9), "power (2/3)^2")
+r = create(1, 3)
+assert abs(to_float(r) - 0.3333333333333333) < 1e-9, "to_float(1/3) ~ 0.33333"
 
-    # 7. compare
-    assert_equal(compare(create(1,2), create(2,3)), -1, "compare 1/2 < 2/3")
-    assert_equal(compare(create(2,3), create(1,2)), 1, "compare 2/3 > 1/2")
-    assert_equal(compare(create(1,2), create(2,4)), 0, "compare 1/2 == 2/4")
+# to_str проверяем только что не падет
+try:
+    to_str(create(3, 4))
+except Exception as e:
+    assert False, "error"
 
-    # 8. to_int
-    assert_equal(to_int(create(7,3)), 2, "to_int 7/3")
-    assert_equal(to_int(create(-7,3)), -3, "to_int -7/3")
-
-    # 9. to_float
-    f = to_float(create(1,3))
-    if abs(f - 0.3333333333333333) < 1e-9:
-        print("[OK] to_float 1/3")
-    else:
-        print(f"[FAIL] to_float 1/3: got {f}")
-
-    # 10. to_str (проверяем только что не падает)
-    try:
-        to_str(create(3,4))
-        print("[OK] to_str выполнился без ошибок (проверьте вывод вручную)")
-    except Exception as e:
-        print(f"[FAIL] to_str упал с ошибкой: {e}")
+print("Все тесты пройдены")
