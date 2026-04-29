@@ -9,11 +9,10 @@ def create(num, den):
         res.numer = 0
         res.denom = 1
         return res
-    # перенос знака в числитель
     if den < 0:
         num = -num
         den = -den
-    # сокращение дроби через алгоритм Евклида (вычитанием)
+    # сокращение дроби через алгоритм Евклид
     a = abs(num)
     b = den
     while a != b:

@@ -1,4 +1,6 @@
 import merge_sort as sort
+import random
+
 
 assert sort.merge_sort([]) == []
 
@@ -21,4 +23,5 @@ assert original == copy
 assert sorted_arr == [1, 2, 3]
 
 
-
+# избежать рекурсии, использовать один массив, 20000 символов рандом тесты,
+print(ord('a'))
