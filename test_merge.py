@@ -1,27 +1,66 @@
-import merge_sort as sort
 import random
 
+from merge_sort import merge_sort
 
-assert sort.merge_sort([]) == []
-
-assert sort.merge_sort([42]) == [42]
-
-assert sort.merge_sort([1, 2, 3, 4, 5]) == [1, 2, 3, 4, 5]
-
-assert sort.merge_sort([5, 4, 3, 2, 1]) == [1, 2, 3, 4, 5]
-
-assert sort.merge_sort([3, 1, 4, 1, 5, 9, 2, 6]) == [1, 1, 2, 3, 4, 5, 6, 9]
-
-assert sort.merge_sort(["banana", "apple", "cherry"]) == ["apple", "banana", "cherry"]
-
-assert sort.merge_sort(["b", "a", "b", "c"]) == ["a", "b", "b", "c"]
-
-original = [3, 2, 1]
-copy = original[:]
-sorted_arr = sort.merge_sort(original)
-assert original == copy
-assert sorted_arr == [1, 2, 3]
+arr = []
+result = merge_sort(arr)
+assert result == []
 
 
-# избежать рекурсии, использовать один массив, 20000 символов рандом тесты,
-print(ord('a'))
+
+arr = ["5"]
+result = merge_sort(arr)
+assert result == ["5"]
+
+
+
+arr = ["9", "1"]
+result = merge_sort(arr)
+assert result == ["1", "9"]
+
+
+arr = ["1", "2", "3", "4", "5"]
+result = merge_sort(arr)
+assert result == ["1", "2", "3", "4", "5"]
+
+arr = ["5", "4", "3", "2", "1"]
+result = merge_sort(arr)
+assert result == ["1", "2", "3", "4", "5"]
+
+arr = ["3", "1", "3", "2", "1", "2"]
+result = merge_sort(arr)
+assert result == ["1", "1", "2", "2", "3", "3"]
+
+arr = ["7", "7", "7", "7", "7"]
+result = merge_sort(arr)
+assert result == ["7", "7", "7", "7", "7"]
+
+arr = ["-5", "10", "-3", "0", "7", "-10"]
+result = merge_sort(arr)
+assert result == ["-10", "-5", "-3", "0", "7", "10"]
+
+arr = [str(random.randint(0, 1000)) for _ in range(100)]
+expected = sorted(arr, key=lambda x: int(x))
+result = merge_sort(arr)
+assert result == expected
+
+arr = [str(random.randint(0, 10000)) for _ in range(1000)]
+expected = sorted(arr, key=lambda x: int(x))
+result = merge_sort(arr)
+assert result == expected
+
+
+arr = [str(random.randint(0, 100000)) for _ in range(10000)]
+expected = sorted(arr, key=lambda x: int(x))
+result = merge_sort(arr)
+assert result == expected
+
+
+
+
+arr = [str(random.randint(0, 1000000)) for _ in range(100000)]
+expected = sorted(arr, key=lambda x: int(x))
+result = merge_sort(arr)
+assert result == expected
+
+print('Done')
