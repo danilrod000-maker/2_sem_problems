@@ -152,12 +152,10 @@ zero = create(0, 1)
 res = div(zero, a)
 assert res.numer == 0 and res.denom == 1
 
-# Деление на ноль (должно вернуть None)
 b_zero = create(0, 1)
 res = div(a, b_zero)
 assert res is None
 
-# Деление отрицательного на отрицательное
 res = div(create(-2, 3), create(-4, 5))
 assert res.numer == 5 and res.denom == 6
 
