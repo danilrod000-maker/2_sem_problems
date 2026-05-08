@@ -1,6 +1,6 @@
 import random
 
-from merge_sort import merge_sort
+from merge_20 import merge_sort
 
 arr = []
 result = merge_sort(arr)
@@ -37,7 +37,9 @@ assert result == ["7", "7", "7", "7", "7"]
 
 arr = ["-5", "10", "-3", "0", "7", "-10"]
 result = merge_sort(arr)
+print(result)
 assert result == ["-10", "-5", "-3", "0", "7", "10"]
+
 
 arr = [str(random.randint(0, 1000)) for _ in range(100)]
 expected = sorted(arr, key=lambda x: int(x))
