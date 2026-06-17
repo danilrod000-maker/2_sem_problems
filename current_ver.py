@@ -1,5 +1,8 @@
 import tkinter as tk
 
+
+
+
 class Node:
     @staticmethod
     def create(value):
@@ -221,7 +224,7 @@ class AVLVisualizer:
 
     def add_value(self, event=None):
         try:
-            val = int(self.entry.get())
+            val = float(self.entry.get())
             self.root = AVLTree.insert(self.root, val)
             self.entry.delete(0, tk.END)
             self.draw()
@@ -230,7 +233,7 @@ class AVLVisualizer:
 
     def delete_value(self, event=None):
         try:
-            val = int(self.delete_entry.get())
+            val = float(self.delete_entry.get())
             self.root = AVLTree.delete(self.root, val)
             self.delete_entry.delete(0, tk.END)
             self.draw()
