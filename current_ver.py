@@ -1,14 +1,15 @@
 import tkinter as tk
 
-
 class Node:
-    def __init__(self, value):
-        self.value = value
-        self.left = None
-        self.right = None
-        self.height = 1
-        self.expanded = False
-
+    @staticmethod
+    def create(value):
+        node = Node()
+        node.value = value
+        node.left = None
+        node.right = None
+        node.height = 1
+        node.expanded = False
+        return node
 
 class AVLTree:
     @staticmethod
@@ -46,13 +47,16 @@ class AVLTree:
     @staticmethod
     def insert(node, value):
         if not node:
-            return Node(value)
+            return Node.create(value)
+
         if value < node.value:
             node.left = AVLTree.insert(node.left, value)
         else:
             node.right = AVLTree.insert(node.right, value)
+
         AVLTree.update_height(node)
         balance = AVLTree.balance_factor(node)
+
         if balance > 1 and value < node.left.value:
             return AVLTree.rotate_right(node)
         if balance < -1 and value > node.right.value:
@@ -63,6 +67,7 @@ class AVLTree:
         if balance < -1 and value < node.right.value:
             node.right = AVLTree.rotate_right(node.right)
             return AVLTree.rotate_left(node)
+
         return node
 
     @staticmethod
@@ -75,6 +80,7 @@ class AVLTree:
     def delete(node, value):
         if not node:
             return node
+
         if value < node.value:
             node.left = AVLTree.delete(node.left, value)
         elif value > node.value:
@@ -84,11 +90,14 @@ class AVLTree:
                 return node.right
             elif not node.right:
                 return node.left
+
             temp = AVLTree.get_min(node.right)
             node.value = temp.value
             node.right = AVLTree.delete(node.right, temp.value)
+
         AVLTree.update_height(node)
         balance = AVLTree.balance_factor(node)
+
         if balance > 1 and AVLTree.balance_factor(node.left) >= 0:
             return AVLTree.rotate_right(node)
         if balance > 1 and AVLTree.balance_factor(node.left) < 0:
@@ -99,8 +108,8 @@ class AVLTree:
         if balance < -1 and AVLTree.balance_factor(node.right) > 0:
             node.right = AVLTree.rotate_right(node.right)
             return AVLTree.rotate_left(node)
-        return node
 
+        return node
 
 class AVLVisualizer:
     @staticmethod
@@ -110,46 +119,69 @@ class AVLVisualizer:
         app.window = tk.Tk()
         app.window.title("AVL Tree Visualizer")
 
-        # Инициализация переменных
         app.zoom = 1.0
         app.offset_x = 0
         app.offset_y = 0
         app.nodes_coords = []
+        app.last_x = 0
+        app.last_y = 0
 
-        # UI Панель
-        app.left_frame = tk.Frame(app.window, padx=10, pady=10)
+        app.left_frame = tk.Frame(app.window, padx=10, pady=10, relief="ridge", borderwidth=2)
         app.left_frame.pack(side="left", fill="y")
 
-        tk.Label(app.left_frame, text="Добавить:").pack()
+        tk.Label(app.left_frame, text="ИНСТРУКЦИЯ", font=("Arial", 10, "bold")).pack(pady=(0, 5))
+        instructions = (
+            "• Введите число и нажмите Enter\n"
+            "  чтобы добавить узел.\n"
+            "• Введите число в поле удаления\n"
+            "  и нажмите Enter.\n"
+            "• Стрелки на клавиатуре —\n"
+            "  перемещение дерева.\n"
+            "• Зажмите ЛКМ и тяните мышь,\n"
+            "  чтобы сдвигать холст.\n"
+            "• Ползунок меняет масштаб.\n"
+            "• Клик по узлу —\n"
+            "  свернуть / развернуть."
+        )
+        tk.Label(app.left_frame, text=instructions, justify="left", fg="#333").pack(pady=(0, 15))
+
+        tk.Label(app.left_frame, text="Добавить значение:").pack()
         app.entry = tk.Entry(app.left_frame)
-        app.entry.pack()
+        app.entry.pack(pady=(0, 10))
         app.entry.bind("<Return>", app.add_value)
 
-        tk.Label(app.left_frame, text="Удалить:").pack()
+        tk.Label(app.left_frame, text="Удалить значение:").pack()
         app.delete_entry = tk.Entry(app.left_frame)
-        app.delete_entry.pack()
+        app.delete_entry.pack(pady=(0, 10))
         app.delete_entry.bind("<Return>", app.delete_value)
 
         tk.Label(app.left_frame, text="Масштаб:").pack()
-        app.scale = tk.Scale(app.left_frame, from_=0.2, to=3.0, resolution=0.1, orient="horizontal",
-                             command=app.on_scale)
+        app.scale = tk.Scale(
+            app.left_frame,
+            from_=0.2,
+            to=3.0,
+            resolution=0.1,
+            orient="horizontal",
+            command=app.on_scale
+        )
         app.scale.set(1.0)
-        app.scale.pack()
+        app.scale.pack(pady=(0, 10))
 
-        # Холст
         app.right_frame = tk.Frame(app.window)
         app.right_frame.pack(side="right", fill="both", expand=True)
+
         app.canvas = tk.Canvas(app.right_frame, bg="white", width=800, height=600)
         app.canvas.pack(fill="both", expand=True)
 
-        # Биндинги
         app.canvas.bind("<Button-1>", app.handle_click)
         app.canvas.bind("<B1-Motion>", app.drag)
+
         app.window.bind("<Left>", lambda e: app.move(-50, 0))
         app.window.bind("<Right>", lambda e: app.move(50, 0))
         app.window.bind("<Up>", lambda e: app.move(0, -50))
         app.window.bind("<Down>", lambda e: app.move(0, 50))
 
+        app.draw()
         return app
 
     def handle_click(self, event):
@@ -158,6 +190,7 @@ class AVLVisualizer:
             if (event.x - nx) ** 2 + (event.y - ny) ** 2 <= r ** 2:
                 clicked_node = node
                 break
+
         if clicked_node:
             clicked_node.expanded = not clicked_node.expanded
             self.draw()
@@ -186,7 +219,7 @@ class AVLVisualizer:
         self.zoom = float(val)
         self.draw()
 
-    def add_value(self, event):
+    def add_value(self, event=None):
         try:
             val = int(self.entry.get())
             self.root = AVLTree.insert(self.root, val)
@@ -195,7 +228,7 @@ class AVLVisualizer:
         except ValueError:
             pass
 
-    def delete_value(self, event):
+    def delete_value(self, event=None):
         try:
             val = int(self.delete_entry.get())
             self.root = AVLTree.delete(self.root, val)
@@ -205,43 +238,51 @@ class AVLVisualizer:
             pass
 
     def subtree_width(self, node):
-        if not node: return 0
+        if not node:
+            return 0
         return max(1, self.subtree_width(node.left) + self.subtree_width(node.right))
-
-    def draw(self):
-        self.canvas.delete("all")
-        self.nodes_coords = []
-        if self.root:
-            w = self.subtree_width(self.root)
-            self.draw_node(self.root, 400, 50, w * 50)
 
     def format_value(self, node):
         s_val = str(node.value)
         return s_val if (node.expanded or len(s_val) <= 4) else s_val[:2] + ".."
 
+    def draw(self):
+        self.canvas.delete("all")
+        self.nodes_coords = []
+
+        if self.root:
+            w = self.subtree_width(self.root)
+            self.draw_node(self.root, 400, 50, w * 50)
+
     def draw_node(self, node, x, y, width):
-        if not node: return
+        if not node:
+            return
+
         curr_x = x * self.zoom + self.offset_x
         curr_y = y * self.zoom + self.offset_y
         display_text = self.format_value(node)
         r = int((15 + len(display_text) * 2) * self.zoom)
+
         self.nodes_coords.append((node, curr_x, curr_y, r))
 
         dx = width / 2
         dy = 80
+
         if node.left:
-            cx, cy = (x - dx) * self.zoom + self.offset_x, (y + dy) * self.zoom + self.offset_y
+            cx = (x - dx) * self.zoom + self.offset_x
+            cy = (y + dy) * self.zoom + self.offset_y
             self.canvas.create_line(curr_x, curr_y, cx, cy, fill="gray")
             self.draw_node(node.left, x - dx, y + dy, dx)
+
         if node.right:
-            cx, cy = (x + dx) * self.zoom + self.offset_x, (y + dy) * self.zoom + self.offset_y
+            cx = (x + dx) * self.zoom + self.offset_x
+            cy = (y + dy) * self.zoom + self.offset_y
             self.canvas.create_line(curr_x, curr_y, cx, cy, fill="gray")
             self.draw_node(node.right, x + dx, y + dy, dx)
 
         color = "lightgreen" if node.expanded else "lightblue"
         self.canvas.create_oval(curr_x - r, curr_y - r, curr_x + r, curr_y + r, fill=color)
-        self.canvas.create_text(curr_x, curr_y, text=display_text, font=("Arial", int(10 * self.zoom)))
-
+        self.canvas.create_text(curr_x, curr_y, text=display_text, font=("Arial", max(8, int(10 * self.zoom))))
 
 app = AVLVisualizer.create()
 app.window.mainloop()
