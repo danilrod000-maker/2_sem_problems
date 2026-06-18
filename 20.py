@@ -184,8 +184,8 @@ class AVLVisualizer:
         app.window.title("AVL Tree Visualizer")
 
         app.zoom = 1.0
-        app.offset_x = 0
-        app.offset_y = 0
+        app.move_x = 0
+        app.move_y = 0
         app.nodes_coords = []
         app.last_x = 0
         app.last_y = 0
@@ -275,8 +275,8 @@ class AVLVisualizer:
             self.start_drag(event)
 
     def move(self, dx, dy):
-        self.offset_x += dx
-        self.offset_y += dy
+        self.move_x += dx
+        self.move_y += dy
         self.draw()
 
     def start_drag(self, event):
@@ -286,8 +286,8 @@ class AVLVisualizer:
     def drag(self, event):
         dx = event.x - self.last_x
         dy = event.y - self.last_y
-        self.offset_x += dx
-        self.offset_y += dy
+        self.move_x += dx
+        self.move_y += dy
         self.last_x = event.x
         self.last_y = event.y
         self.draw()
@@ -341,8 +341,8 @@ class AVLVisualizer:
         if not node:
             return
 
-        curr_x = x * self.zoom + self.offset_x
-        curr_y = y * self.zoom + self.offset_y
+        curr_x = x * self.zoom + self.move_x
+        curr_y = y * self.zoom + self.move_y
         display_text = self.format_value(node)
         r = int((15 + len(display_text) * 2) * self.zoom)
 
@@ -352,14 +352,14 @@ class AVLVisualizer:
         dy = 80
 
         if node.left:
-            cx = (x - dx) * self.zoom + self.offset_x
-            cy = (y + dy) * self.zoom + self.offset_y
+            cx = (x - dx) * self.zoom + self.move_x
+            cy = (y + dy) * self.zoom + self.move_y
             self.canvas.create_line(curr_x, curr_y, cx, cy, fill="gray")
             self.draw_node(node.left, x - dx, y + dy, dx)
 
         if node.right:
-            cx = (x + dx) * self.zoom + self.offset_x
-            cy = (y + dy) * self.zoom + self.offset_y
+            cx = (x + dx) * self.zoom + self.move_x
+            cy = (y + dy) * self.zoom + self.move_y
             self.canvas.create_line(curr_x, curr_y, cx, cy, fill="gray")
             self.draw_node(node.right, x + dx, y + dy, dx)
 
