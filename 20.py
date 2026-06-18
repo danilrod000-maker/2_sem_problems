@@ -4,7 +4,6 @@ import tkinter as tk
 
 
 class Node:
-    #@staticmethod
     def create(value):
         node = Node()
         node.value = value
@@ -15,19 +14,17 @@ class Node:
         return node
 
 class AVLTree:
-    #@staticmethod
     def height(n):
         return n.height if n else 0
 
-    #@staticmethod
     def update_height(n):
         n.height = max(AVLTree.height(n.left), AVLTree.height(n.right)) + 1
 
-    #@staticmethod
     def balance_factor(n):
         return AVLTree.height(n.left) - AVLTree.height(n.right)
 
-    @staticmethod
+
+
     def rotate_right(y):
         x = y.left
         T2 = x.right
@@ -37,7 +34,6 @@ class AVLTree:
         AVLTree.update_height(x)
         return x
 
-    @staticmethod
     def rotate_left(x):
         y = x.right
         T2 = y.left
@@ -47,7 +43,7 @@ class AVLTree:
         AVLTree.update_height(y)
         return y
 
-    #@staticmethod
+
     def insert(node, value):
         if not node:
             return Node.create(value)
@@ -73,13 +69,11 @@ class AVLTree:
 
         return node
 
-    @staticmethod
     def get_min(node):
         while node.left:
             node = node.left
         return node
 
-    @staticmethod
     def delete(node, value):
         if not node:
             return node
@@ -115,19 +109,18 @@ class AVLTree:
         return node
 
 class SplayTree:
-    @staticmethod
+
     def rotate_right(x):
         y = x.left
         x.left = y.right
         y.right = x
         return y
-    @staticmethod
+
     def rotate_left(x):
         y = x.right
         x.right = y.left
         y.left = x
         return y
-    @staticmethod
     def splay(root, value):
         if not root or root.value == value:
             return root
@@ -153,7 +146,6 @@ class SplayTree:
                 if root.right.left:
                     root.right = SplayTree.rotate_right(root.right)
             return root if not root.right else SplayTree.rotate_left(root)
-    @staticmethod
     def insert(root, value):
         if not root:
             return Node.create(value)
@@ -170,7 +162,8 @@ class SplayTree:
             new_node.right = root.right
             root.right = None
         return new_node
-    @staticmethod
+
+
     def delete(root, value):
         if not root:
             return None
@@ -183,7 +176,7 @@ class SplayTree:
         new_root.right = root.right
         return new_root
 class AVLVisualizer:
-    @staticmethod
+
     def create():
         app = AVLVisualizer()
         app.root = None
@@ -197,7 +190,7 @@ class AVLVisualizer:
         app.last_x = 0
         app.last_y = 0
 
-        app.left_frame = tk.Frame(app.window, padx=10, pady=10, relief="ridge", borderwidth=2)
+        app.left_frame = tk.Frame(app.window, padx=15, pady=1, relief="ridge", borderwidth=5)
         app.left_frame.pack(side="left", fill="y")
 
         app.mode = "AVL"
